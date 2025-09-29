@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Math_Upgraded/Math_Upgraded2/Math_Upgraded2.iml" filepath="$PROJECT_DIR$/Math_Upgraded/Math_Upgraded2/Math_Upgraded2.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/SpringBoot_EleonoraArcuri.iml" filepath="$PROJECT_DIR$/.idea/SpringBoot_EleonoraArcuri.iml" />
     </modules>
   </component>
