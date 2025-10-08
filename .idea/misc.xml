@@ -10,10 +10,11 @@
         <option value="$PROJECT_DIR$/Math_Upgraded/Math_Upgraded2/pom.xml" />
         <option value="$PROJECT_DIR$/Math_Upgraded_es2/pom.xml" />
         <option value="$PROJECT_DIR$/Math_Upgraded_es3/pom.xml" />
+        <option value="$PROJECT_DIR$/Prenotazione_Corse_Autobus/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_25" default="true" project-jdk-name="openjdk-15" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="17" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>
