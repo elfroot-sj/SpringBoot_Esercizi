@@ -3,10 +3,11 @@ package com.example.prenotazione_corse_autobus.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 @Entity
@@ -14,24 +15,51 @@ import java.util.List;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @NotNull(message = "Email is required!")
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
 
     @NotNull(message = "Password is required!")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password; // salva SOLO l'hash a livello service
 
-    //il credito non può essere negativo
-    @DecimalMin(value = "0.0", inclusive = true, message = "Credit must not be negative!")
-    @NotNull(message = "Credit is required!")
+    //il credito non può essere negativo, ma è opzionale
+    @PositiveOrZero(message = "Credit must be >= 0")
+    @Column(nullable = false, precision = 12, scale = 2) //valore del credito max 12 cifre: 10 prima e 2 dopo la virgola
     private BigDecimal credit;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            foreignKey = @ForeignKey(name = "fk_user_roles_user")
+    )
+    @Column(name = "role", nullable = false, length = 30)
     private List<String> roles;
+
+    /* -------- lifecycle: default & normalizzazione -------- */
+    @PrePersist
+    void prePersist() {
+        // email normalizzata
+        if (email != null) email = email.trim().toLowerCase();
+
+        // credit opzionale in input → default 0.00, scala 2
+        if (credit == null) credit = BigDecimal.ZERO;
+        credit = credit.setScale(2, RoundingMode.HALF_UP);
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        if (credit != null) {
+            credit = credit.setScale(2, RoundingMode.HALF_UP);
+        }
+        if (email != null) email = email.trim().toLowerCase();
+    }
+
+    /* -------- getters/setters fluent -------- */
 
     public Integer getId() {
         return id;

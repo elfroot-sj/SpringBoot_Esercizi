@@ -3,10 +3,12 @@ package com.example.prenotazione_corse_autobus;
 
 
 import com.example.prenotazione_corse_autobus.security.AuthTokenFilter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity // per @PreAuthorize, ecc.
+//@RequiredArgsConstructor
 public class ProjectConfig {
 
     private final ProjectUserDetailsService userDetailsService;
@@ -34,12 +37,18 @@ public class ProjectConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v2/**", "/swagger-ui/**").permitAll()
-                        .requestMatchers("/user/register", "/user/login/**", "/user/re-auth/**").permitAll()
-                        //.requestMatchers("/user/all").hasAuthority("ADMIN")
-                        //.requestMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority("ADMIN")
+                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/re-auth").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/trips/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/trips/*/buy").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/trips").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
+                //.httpBasic(Customizer.withDefaults())
+                .userDetailsService(userDetailsService)
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

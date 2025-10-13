@@ -42,7 +42,7 @@ public class ProjectUserDetailsService implements UserDetailsService {
 
     }
 
-    // Costruisce la lista dei privilegi concessi all'utente, sulla base dei ruoli ad esso associati
+    // Costruisce la lista dei privilegi concessi all'utente, sulla base dei ruoli ad esso associati (ADMIN o USER)
     private List<GrantedAuthority> getAuth(List<String> roles){
         List<GrantedAuthority> authorities = new ArrayList<>();
 

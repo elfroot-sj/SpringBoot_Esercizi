@@ -2,3 +2,8 @@ CREATE USER 'springroot'@'localhost' IDENTIFIED BY 'DB2025!';
 CREATE DATABASE bus_ticketing;
 GRANT ALL PRIVILEGES ON bus_ticketing.* TO 'springroot'@'localhost';
 FLUSH PRIVILEGES;
+
+
+UPDATE user_roles
+SET role = 'ADMIN'
+WHERE user_id = 1
